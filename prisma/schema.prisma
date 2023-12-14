@@ -25,7 +25,7 @@ model Vehicle {
   year      Int
   make      String
   model     String
-  doors     Int
+  doors     String
   class    Class
   window   WindowSize[]
   createdAt DateTime @default(now())
@@ -41,8 +41,7 @@ OTHER
 }
 
 model WindowSize{
-  id        Int      @id @default(autoincrement())
-  vehicleId Int
+  id        Int      @id @default(autoincrement())  
   vehicle   Vehicle[]
   a        String
   b        String
