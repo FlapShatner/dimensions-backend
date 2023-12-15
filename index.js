@@ -1,5 +1,6 @@
 import express from 'express';
 import prisma from './lib/prisma.mjs';
+import { addVehicleWithWindowSize } from './utils.js';
 
 const app = express();
 
@@ -18,37 +19,20 @@ app.get('/users', async (req, res) => {
   }
 });
 
-
 app.post('/save', async (req, res) => {
+  const data = req.body;
   try{
-    const {year, make, model, doors, class:truckClass , a, b, c } = req.body;
-   
-    console.log(req.body);
-    const newVehicle = await prisma.vehicle.create({
-      data: {
-        year: year,
-        make: make,
-        model: model,
-        doors: doors,
-        class: truckClass,
-        window: {
-          create: {
-            a: a,
-            b: b,
-            c: c,
-          }
-        }
-      },
-      include: {
-        window: true
-      }
-    });
-    res.json(newVehicle);
+  const response = await addVehicleWithWindowSize(data.vehicle, data.window);
+  res.json(response);
 
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
   }
-})
+}) 
+
+
+
 
 app.post('/user', async (req, res) => {
     const { name, email } = req.body;
