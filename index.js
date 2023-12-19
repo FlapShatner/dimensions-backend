@@ -19,6 +19,15 @@ app.get('/users', async (req, res) => {
  }
 })
 
+app.get('/makes', async (req, res) => {
+  try {
+    const makes = await prisma.make.findMany()
+    res.json(makes)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 app.post('/save', async (req, res) => {
  const data = req.body
  const vehicleData = {
