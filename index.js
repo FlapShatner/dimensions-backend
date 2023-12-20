@@ -28,6 +28,25 @@ app.get('/makes', async (req, res) => {
   }
 })
 
+app.post('/vehicles', async (req, res) => {
+  console.log(req.body)
+  const data = req.body
+  try {
+  const vehicles = await prisma.vehicle.findMany({
+    where: {
+      make: data.make,
+      model: data.model,
+      year: Number(data.year),
+      class: data.class,
+      doors: data.doors
+    }
+  })
+  res.json(vehicles)
+ } catch (error) {
+  console.log(error)
+ }
+})
+
 app.post('/makes', async (req, res) => {
   console.log(req.body)
   try {
@@ -56,7 +75,6 @@ app.post('/save', async (req, res) => {
   b: data.b,
   c: data.c,
  }
-
  //  console.log(data)
  try {
   const response = await addVehicleWithWindowSize(vehicleData, windowData)
