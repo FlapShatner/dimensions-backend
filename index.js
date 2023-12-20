@@ -28,6 +28,20 @@ app.get('/makes', async (req, res) => {
   }
 })
 
+app.post('/makes', async (req, res) => {
+  console.log(req.body)
+  try {
+    const make = await prisma.make.create({
+      data: {
+        make: req.body.label,
+      },
+    })
+    res.json(make)
+  } catch (error) {
+    res.json({ error: 'Server Error' })
+  }
+})
+
 app.post('/save', async (req, res) => {
  const data = req.body
  const vehicleData = {
