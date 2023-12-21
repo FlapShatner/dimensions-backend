@@ -29,23 +29,29 @@ app.get('/makes', async (req, res) => {
 })
 
 app.post('/vehicles', async (req, res) => {
-  console.log(req.body)
-  const data = req.body
+  // console.log(req.body);
+  const data = req.body;
+
+  const whereClause = {};
+  if (data.make) whereClause.make = data.make;
+  if (data.model) whereClause.model = data.model;
+  if (data.year) whereClause.year = Number(data.year);
+  if (data.class) whereClause.class = data.class;
+  if (data.doors) whereClause.doors = data.doors;
+
   try {
-  const vehicles = await prisma.vehicle.findMany({
-    where: {
-      make: data.make,
-      model: data.model,
-      year: Number(data.year),
-      class: data.class,
-      doors: data.doors
-    }
-  })
-  res.json(vehicles)
- } catch (error) {
-  console.log(error)
- }
-})
+    const vehicles = await prisma.vehicle.findMany({
+      where: whereClause,
+      include: {
+        window: true,
+      },
+    });
+    res.json(vehicles);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 
 app.post('/makes', async (req, res) => {
   console.log(req.body)
