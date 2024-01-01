@@ -36,7 +36,7 @@ app.post('/vehicles', async (req, res) => {
   if (data.make) whereClause.make = data.make;
   if (data.model) whereClause.model = data.model;
   if (data.year) whereClause.year = Number(data.year);
-  if (data.class) whereClause.class = data.class;
+  // if (data.class) whereClause.class = data.class;
   if (data.doors) whereClause.doors = data.doors;
 
   try {
