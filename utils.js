@@ -46,6 +46,8 @@ export async function addVehicleWithWindowSize(vehicleData, windowData) {
  return response
 }
 
+
+
 // Example usage
 // const vehicleData = { year: 2020, make: 'Toyota', model: 'Camry', doors: '4', class: 'MIDSIZE' };
 // const windowData = { a: '100cm', b: '50cm', c: '30cm' };

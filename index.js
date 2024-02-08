@@ -28,29 +28,61 @@ app.get('/makes', async (req, res) => {
   }
 })
 
+app.get('/vehicle/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const vehicle = await prisma.vehicle.findFirst({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        WindowSize: true,
+      },
+    });
+    res.json(vehicle);
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.post('/make-models', async (req, res) => {
+  console.log(req.body)
+  const { makeId } = req.body;
+  try {
+    const make = await prisma.make.findFirst({
+      where: {
+        id: makeId,
+      },
+      include: {
+        Model: true,
+      },
+    });
+    res.json(make.Model);
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
 app.post('/vehicles', async (req, res) => {
-  // console.log(req.body);
-  const data = req.body;
-
-  const whereClause = {};
-  if (data.make) whereClause.make = data.make;
-  if (data.model) whereClause.model = data.model;
-  if (data.year) whereClause.year = Number(data.year);
-  // if (data.class) whereClause.class = data.class;
-  if (data.doors) whereClause.doors = data.doors;
-
+  const {id, year} = req.body;
+  console.log(req.body)
   try {
     const vehicles = await prisma.vehicle.findMany({
-      where: whereClause,
+      where: {
+        makeId: Number(id),
+        year: Number(year),
+      },
       include: {
-        window: true,
+        Model: true,
       },
     });
     res.json(vehicles);
   } catch (error) {
     console.log(error);
   }
-});
+})
+
 
 
 app.post('/makes', async (req, res) => {
@@ -87,22 +119,6 @@ app.post('/save', async (req, res) => {
   res.json(response)
  } catch (error) {
   console.log(error)
- }
-})
-
-app.post('/user', async (req, res) => {
- const { name, email } = req.body
- try {
-  const newUser = await prisma.user.create({
-   data: {
-    email: email,
-    name: name,
-   },
-  })
-
-  res.json(newUser)
- } catch (error) {
-  res.json({ error: error })
  }
 })
 

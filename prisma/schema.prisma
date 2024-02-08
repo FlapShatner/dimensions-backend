@@ -1,58 +1,47 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// prisma/schema.prisma
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String? 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Vehicle {
-  id        Int      @id @default(autoincrement())
-  year      Int
-  make      String
-  model     String
-  doors     String
-  class    Class
-  window   WindowSize[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int        @id @default(autoincrement())
+  makeId       Int
+  modelId      Int
+  year         Int
+  doors        Int
+  windowSizeId Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  Make         Make       @relation(fields: [makeId], references: [id])
+  Model        Model      @relation(fields: [modelId], references: [id])
+  WindowSize   WindowSize @relation(fields: [windowSizeId], references: [id])
 }
 
-enum Class {
-MIDSIZE
-HALF
-THREEQUARTER
-ONE
-OTHER
-}
-
-model WindowSize{
-  id        Int      @id @default(autoincrement())  
-  vehicle   Vehicle[]
-  a        String
-  b        String
-  c        String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model WindowSize {
+  id      Int       @id @default(autoincrement())
+  name    String
+  a       Int
+  b       Int
+  c       Int
+  Vehicle Vehicle[]
 }
 
 model Make {
-  id        Int      @id @default(autoincrement())
-  make      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id      Int       @id @default(autoincrement())
+  name    String
+  Model   Model[]
+  Vehicle Vehicle[]
+}
+
+model Model {
+  id      Int       @id @default(autoincrement())
+  name    String
+  makeId  Int
+  Make    Make      @relation(fields: [makeId], references: [id])
+  Vehicle Vehicle[]
 }
