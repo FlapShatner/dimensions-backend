@@ -1,5 +1,6 @@
 import express from 'express'
 import prisma from './lib/prisma.mjs'
+import { getMakes, getVehicle, getVehicles } from './services.js'
 import { addVehicleWithWindowSize } from './utils.js'
 
 const app = express()
@@ -10,18 +11,9 @@ app.get('/', (req, res) => {
  res.send('Hello from dimensions-app backend!')
 })
 
-app.get('/users', async (req, res) => {
- try {
-  const users = await prisma.user.findMany()
-  res.json(users)
- } catch (error) {
-  console.log(error)
- }
-})
-
 app.get('/makes', async (req, res) => {
   try {
-    const makes = await prisma.make.findMany()
+    const makes = await getMakes()
     res.json(makes)
   } catch (error) {
     console.log(error)
@@ -31,52 +23,23 @@ app.get('/makes', async (req, res) => {
 app.get('/vehicle/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const vehicle = await prisma.vehicle.findFirst({
-      where: {
-        id: Number(id),
-      },
-      include: {
-        WindowSize: true,
-      },
-    });
+    const vehicle = await getVehicle(id);
     res.json(vehicle);
   } catch (error) {
     console.log(error);
   }
 })
 
-app.post('/make-models', async (req, res) => {
-  console.log(req.body)
-  const { makeId } = req.body;
-  try {
-    const make = await prisma.make.findFirst({
-      where: {
-        id: makeId,
-      },
-      include: {
-        Model: true,
-      },
-    });
-    res.json(make.Model);
-  } catch (error) {
-    console.log(error);
-  }
-})
 
 
 app.post('/vehicles', async (req, res) => {
   const {id, year} = req.body;
   console.log(req.body)
+  if (!id || !year) {
+    return
+  }
   try {
-    const vehicles = await prisma.vehicle.findMany({
-      where: {
-        makeId: Number(id),
-        year: Number(year),
-      },
-      include: {
-        Model: true,
-      },
-    });
+    const vehicles =await getVehicles(id, year);
     res.json(vehicles);
   } catch (error) {
     console.log(error);
