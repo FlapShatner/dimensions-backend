@@ -1,7 +1,6 @@
 import express from 'express'
 import prisma from './lib/prisma.mjs'
-import { getMakes, getVehicle, getVehicles } from './services.js'
-import { addVehicleWithWindowSize } from './utils.js'
+import { getMakes, getVehicle, getVehicles, addVehicle } from './services.js'
 
 const app = express()
 
@@ -65,20 +64,18 @@ app.post('/makes', async (req, res) => {
 app.post('/save', async (req, res) => {
  const data = req.body
  const vehicleData = {
-  year: data.year,
-  make: data.make,
-  model: data.model,
-  doors: data.doors,
-  class: data.class,
+  year: data.vehicle.year,
+  make: data.vehicle.make,
+  model: data.vehicle.model,
+  doors: data.vehicle.doors,
  }
  const windowData = {
-  a: data.a,
-  b: data.b,
-  c: data.c,
+  a: data.window.a,
+  b: data.window.b,
+  c: data.window.c,
  }
- //  console.log(data)
  try {
-  const response = await addVehicleWithWindowSize(vehicleData, windowData)
+  const response = await addVehicle(vehicleData, windowData)
   res.json(response)
  } catch (error) {
   console.log(error)
