@@ -33,7 +33,7 @@ app.get('/vehicle/:id', async (req, res) => {
 
 app.post('/vehicles', async (req, res) => {
   const {id, year} = req.body;
-  console.log(req.body)
+  // console.log(req.body)
   if (!id || !year) {
     return
   }

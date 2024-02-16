@@ -19,7 +19,7 @@ export const getVehicle = async (id) => {
 }
 
 export const getVehicles = async (id, year) => {
-  console.log(id, year)
+  // console.log(id, year)
  const vehicles = await prisma.vehicle.findMany({
     where: {
       makeId: Number(id),
